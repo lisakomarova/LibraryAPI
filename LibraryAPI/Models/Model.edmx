@@ -1,0 +1,583 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище plibrarydbModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Book">
+          <Key>
+            <PropertyRef Name="book_id" />
+          </Key>
+          <Property Name="book_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="userid" Type="varchar(max)" Nullable="false" />
+          <Property Name="title" Type="varchar(max)" Nullable="false" />
+          <Property Name="genre" Type="varchar(max)" />
+          <Property Name="publication_year" Type="int" Nullable="false" />
+          <Property Name="authors" Type="varchar(max)" />
+          <Property Name="book_status" Type="int" Nullable="false" />
+          <Property Name="cover" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="Book_status">
+          <Key>
+            <PropertyRef Name="status_id" />
+          </Key>
+          <Property Name="status_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="book_status" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="Loan">
+          <Key>
+            <PropertyRef Name="loan_id" />
+          </Key>
+          <Property Name="loan_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="userid" Type="varchar(max)" Nullable="false" />
+          <Property Name="reader_id" Type="int" Nullable="false" />
+          <Property Name="book_id" Type="int" Nullable="false" />
+          <Property Name="loan_date" Type="datetime" />
+          <Property Name="if_closed" Type="bit" />
+        </EntityType>
+        <EntityType Name="Reader">
+          <Key>
+            <PropertyRef Name="reader_id" />
+          </Key>
+          <Property Name="reader_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="userid" Type="varchar(max)" Nullable="false" />
+          <Property Name="first_name" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="last_name" Type="varchar" MaxLength="255" />
+          <Property Name="email" Type="varchar" MaxLength="255" />
+          <Property Name="has_book" Type="bit" />
+        </EntityType>
+        <Association Name="FK__Book__book_statu__14270015">
+          <End Role="Book_status" Type="Self.Book_status" Multiplicity="1" />
+          <End Role="Book" Type="Self.Book" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Book_status">
+              <PropertyRef Name="status_id" />
+            </Principal>
+            <Dependent Role="Book">
+              <PropertyRef Name="book_status" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Loan__book_id__1BC821DD">
+          <End Role="Book" Type="Self.Book" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Loan" Type="Self.Loan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Book">
+              <PropertyRef Name="book_id" />
+            </Principal>
+            <Dependent Role="Loan">
+              <PropertyRef Name="book_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Loan__if_closed__1AD3FDA4">
+          <End Role="Reader" Type="Self.Reader" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Loan" Type="Self.Loan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Reader">
+              <PropertyRef Name="reader_id" />
+            </Principal>
+            <Dependent Role="Loan">
+              <PropertyRef Name="reader_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="DeleteBook" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="in_book_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="DeleteLoan" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="in_loan_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="DeleteReader" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="in_reader_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetAllBooks" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="in_userid" Type="varchar(max)" Mode="In" />
+        </Function>
+        <Function Name="GetAllLoans" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="in_userid" Type="varchar(max)" Mode="In" />
+        </Function>
+        <Function Name="GetAllReaders" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="in_userid" Type="varchar(max)" Mode="In" />
+        </Function>
+        <Function Name="GetBookByID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="in_book_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetLoanByID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="in_loan_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetReaderByID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="in_reader_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="InsertBook" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="in_userid" Type="varchar(max)" Mode="In" />
+          <Parameter Name="in_title" Type="varchar(max)" Mode="In" />
+          <Parameter Name="in_genre" Type="varchar(max)" Mode="In" />
+          <Parameter Name="in_publication_year" Type="int" Mode="In" />
+          <Parameter Name="in_authors" Type="varchar(max)" Mode="In" />
+          <Parameter Name="in_book_status" Type="int" Mode="In" />
+          <Parameter Name="in_cover" Type="varchar(max)" Mode="In" />
+        </Function>
+        <Function Name="InsertLoan" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="in_userid" Type="varchar(max)" Mode="In" />
+          <Parameter Name="in_reader_id" Type="int" Mode="In" />
+          <Parameter Name="in_book_id" Type="int" Mode="In" />
+          <Parameter Name="in_loan_date" Type="datetime2" Mode="In" />
+          <Parameter Name="in_if_closed" Type="bit" Mode="In" />
+        </Function>
+        <Function Name="InsertReader" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="in_userid" Type="varchar(max)" Mode="In" />
+          <Parameter Name="in_first_name" Type="varchar" Mode="In" />
+          <Parameter Name="in_last_name" Type="varchar" Mode="In" />
+          <Parameter Name="in_email" Type="varchar" Mode="In" />
+          <Parameter Name="in_has_book" Type="bit" Mode="In" />
+        </Function>
+        <Function Name="UpdateBook" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="in_book_id" Type="int" Mode="In" />
+          <Parameter Name="in_userid" Type="varchar(max)" Mode="In" />
+          <Parameter Name="in_title" Type="varchar(max)" Mode="In" />
+          <Parameter Name="in_genre" Type="varchar(max)" Mode="In" />
+          <Parameter Name="in_publication_year" Type="int" Mode="In" />
+          <Parameter Name="in_authors" Type="varchar(max)" Mode="In" />
+          <Parameter Name="in_book_status" Type="int" Mode="In" />
+          <Parameter Name="in_cover" Type="varchar(max)" Mode="In" />
+        </Function>
+        <Function Name="UpdateLoan" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="in_loan_id" Type="int" Mode="In" />
+          <Parameter Name="in_userid" Type="varchar(max)" Mode="In" />
+          <Parameter Name="in_reader_id" Type="int" Mode="In" />
+          <Parameter Name="in_book_id" Type="int" Mode="In" />
+          <Parameter Name="in_loan_date" Type="datetime2" Mode="In" />
+          <Parameter Name="in_if_closed" Type="bit" Mode="In" />
+        </Function>
+        <Function Name="UpdateReader" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="in_reader_id" Type="int" Mode="In" />
+          <Parameter Name="in_userid" Type="varchar(max)" Mode="In" />
+          <Parameter Name="in_first_name" Type="varchar" Mode="In" />
+          <Parameter Name="in_last_name" Type="varchar" Mode="In" />
+          <Parameter Name="in_email" Type="varchar" Mode="In" />
+          <Parameter Name="in_has_book" Type="bit" Mode="In" />
+        </Function>
+        <EntityContainer Name="Хранилище plibrarydbModelContainer">
+          <EntitySet Name="Book" EntityType="Self.Book" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Book_status" EntityType="Self.Book_status" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Loan" EntityType="Self.Loan" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Reader" EntityType="Self.Reader" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Book__book_statu__14270015" Association="Self.FK__Book__book_statu__14270015">
+            <End Role="Book_status" EntitySet="Book_status" />
+            <End Role="Book" EntitySet="Book" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Loan__book_id__1BC821DD" Association="Self.FK__Loan__book_id__1BC821DD">
+            <End Role="Book" EntitySet="Book" />
+            <End Role="Loan" EntitySet="Loan" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Loan__if_closed__1AD3FDA4" Association="Self.FK__Loan__if_closed__1AD3FDA4">
+            <End Role="Reader" EntitySet="Reader" />
+            <End Role="Loan" EntitySet="Loan" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="plibrarydbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Book">
+          <Key>
+            <PropertyRef Name="book_id" />
+          </Key>
+          <Property Name="book_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="userid" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="title" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="genre" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="publication_year" Type="Int32" Nullable="false" />
+          <Property Name="authors" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="book_status" Type="Int32" Nullable="false" />
+          <Property Name="cover" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Book_status1" Relationship="Self.FK__Book__book_statu__14270015" FromRole="Book" ToRole="Book_status" />
+          <NavigationProperty Name="Loans" Relationship="Self.FK__Loan__book_id__1BC821DD" FromRole="Book" ToRole="Loan" />
+        </EntityType>
+        <EntityType Name="Book_status">
+          <Key>
+            <PropertyRef Name="status_id" />
+          </Key>
+          <Property Name="status_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="book_status1" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Books" Relationship="Self.FK__Book__book_statu__14270015" FromRole="Book_status" ToRole="Book" />
+        </EntityType>
+        <EntityType Name="Loan">
+          <Key>
+            <PropertyRef Name="loan_id" />
+          </Key>
+          <Property Name="loan_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="userid" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="reader_id" Type="Int32" Nullable="false" />
+          <Property Name="book_id" Type="Int32" Nullable="false" />
+          <Property Name="loan_date" Type="DateTime" Precision="3" />
+          <Property Name="if_closed" Type="Boolean" />
+          <NavigationProperty Name="Book" Relationship="Self.FK__Loan__book_id__1BC821DD" FromRole="Loan" ToRole="Book" />
+          <NavigationProperty Name="Reader" Relationship="Self.FK__Loan__if_closed__1AD3FDA4" FromRole="Loan" ToRole="Reader" />
+        </EntityType>
+        <EntityType Name="Reader">
+          <Key>
+            <PropertyRef Name="reader_id" />
+          </Key>
+          <Property Name="reader_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="userid" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="first_name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="last_name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="has_book" Type="Boolean" />
+          <NavigationProperty Name="Loans" Relationship="Self.FK__Loan__if_closed__1AD3FDA4" FromRole="Reader" ToRole="Loan" />
+        </EntityType>
+        <Association Name="FK__Book__book_statu__14270015">
+          <End Role="Book_status" Type="Self.Book_status" Multiplicity="1" />
+          <End Role="Book" Type="Self.Book" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Book_status">
+              <PropertyRef Name="status_id" />
+            </Principal>
+            <Dependent Role="Book">
+              <PropertyRef Name="book_status" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Loan__book_id__1BC821DD">
+          <End Role="Book" Type="Self.Book" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Loan" Type="Self.Loan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Book">
+              <PropertyRef Name="book_id" />
+            </Principal>
+            <Dependent Role="Loan">
+              <PropertyRef Name="book_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Loan__if_closed__1AD3FDA4">
+          <End Role="Reader" Type="Self.Reader" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Loan" Type="Self.Loan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Reader">
+              <PropertyRef Name="reader_id" />
+            </Principal>
+            <Dependent Role="Loan">
+              <PropertyRef Name="reader_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="plibrarydbEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Books" EntityType="Self.Book" />
+          <EntitySet Name="Book_status" EntityType="Self.Book_status" />
+          <EntitySet Name="Loans" EntityType="Self.Loan" />
+          <EntitySet Name="Readers" EntityType="Self.Reader" />
+          <AssociationSet Name="FK__Book__book_statu__14270015" Association="Self.FK__Book__book_statu__14270015">
+            <End Role="Book_status" EntitySet="Book_status" />
+            <End Role="Book" EntitySet="Books" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Loan__book_id__1BC821DD" Association="Self.FK__Loan__book_id__1BC821DD">
+            <End Role="Book" EntitySet="Books" />
+            <End Role="Loan" EntitySet="Loans" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Loan__if_closed__1AD3FDA4" Association="Self.FK__Loan__if_closed__1AD3FDA4">
+            <End Role="Reader" EntitySet="Readers" />
+            <End Role="Loan" EntitySet="Loans" />
+          </AssociationSet>
+          <FunctionImport Name="DeleteBook">
+            <Parameter Name="in_book_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="DeleteLoan">
+            <Parameter Name="in_loan_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="DeleteReader">
+            <Parameter Name="in_reader_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetAllBooks" ReturnType="Collection(plibrarydbModel.GetAllBooks_Result)">
+            <Parameter Name="in_userid" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="GetAllLoans" ReturnType="Collection(plibrarydbModel.GetAllLoans_Result)">
+            <Parameter Name="in_userid" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="GetAllReaders" ReturnType="Collection(plibrarydbModel.GetAllReaders_Result)">
+            <Parameter Name="in_userid" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="GetBookByID" ReturnType="Collection(plibrarydbModel.GetBookByID_Result)">
+            <Parameter Name="in_book_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetLoanByID" ReturnType="Collection(plibrarydbModel.GetLoanByID_Result)">
+            <Parameter Name="in_loan_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetReaderByID" ReturnType="Collection(plibrarydbModel.GetReaderByID_Result)">
+            <Parameter Name="in_reader_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="InsertBook" ReturnType="Collection(Decimal)">
+            <Parameter Name="in_userid" Mode="In" Type="String" />
+            <Parameter Name="in_title" Mode="In" Type="String" />
+            <Parameter Name="in_genre" Mode="In" Type="String" />
+            <Parameter Name="in_publication_year" Mode="In" Type="Int32" />
+            <Parameter Name="in_authors" Mode="In" Type="String" />
+            <Parameter Name="in_book_status" Mode="In" Type="Int32" />
+            <Parameter Name="in_cover" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="InsertLoan" ReturnType="Collection(Decimal)">
+            <Parameter Name="in_userid" Mode="In" Type="String" />
+            <Parameter Name="in_reader_id" Mode="In" Type="Int32" />
+            <Parameter Name="in_book_id" Mode="In" Type="Int32" />
+            <Parameter Name="in_loan_date" Mode="In" Type="DateTime" />
+            <Parameter Name="in_if_closed" Mode="In" Type="Boolean" />
+          </FunctionImport>
+          <FunctionImport Name="InsertReader" ReturnType="Collection(Decimal)">
+            <Parameter Name="in_userid" Mode="In" Type="String" />
+            <Parameter Name="in_first_name" Mode="In" Type="String" />
+            <Parameter Name="in_last_name" Mode="In" Type="String" />
+            <Parameter Name="in_email" Mode="In" Type="String" />
+            <Parameter Name="in_has_book" Mode="In" Type="Boolean" />
+          </FunctionImport>
+          <FunctionImport Name="UpdateBook">
+            <Parameter Name="in_book_id" Mode="In" Type="Int32" />
+            <Parameter Name="in_userid" Mode="In" Type="String" />
+            <Parameter Name="in_title" Mode="In" Type="String" />
+            <Parameter Name="in_genre" Mode="In" Type="String" />
+            <Parameter Name="in_publication_year" Mode="In" Type="Int32" />
+            <Parameter Name="in_authors" Mode="In" Type="String" />
+            <Parameter Name="in_book_status" Mode="In" Type="Int32" />
+            <Parameter Name="in_cover" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="UpdateLoan">
+            <Parameter Name="in_loan_id" Mode="In" Type="Int32" />
+            <Parameter Name="in_userid" Mode="In" Type="String" />
+            <Parameter Name="in_reader_id" Mode="In" Type="Int32" />
+            <Parameter Name="in_book_id" Mode="In" Type="Int32" />
+            <Parameter Name="in_loan_date" Mode="In" Type="DateTime" />
+            <Parameter Name="in_if_closed" Mode="In" Type="Boolean" />
+          </FunctionImport>
+          <FunctionImport Name="UpdateReader">
+            <Parameter Name="in_reader_id" Mode="In" Type="Int32" />
+            <Parameter Name="in_userid" Mode="In" Type="String" />
+            <Parameter Name="in_first_name" Mode="In" Type="String" />
+            <Parameter Name="in_last_name" Mode="In" Type="String" />
+            <Parameter Name="in_email" Mode="In" Type="String" />
+            <Parameter Name="in_has_book" Mode="In" Type="Boolean" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="GetAllBooks_Result">
+          <Property Type="Int32" Name="book_id" Nullable="false" />
+          <Property Type="String" Name="userid" Nullable="false" />
+          <Property Type="String" Name="title" Nullable="false" />
+          <Property Type="String" Name="genre" Nullable="true" />
+          <Property Type="Int32" Name="publication_year" Nullable="false" />
+          <Property Type="String" Name="authors" Nullable="true" />
+          <Property Type="Int32" Name="book_status" Nullable="false" />
+          <Property Type="String" Name="cover" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GetAllLoans_Result">
+          <Property Type="Int32" Name="loan_id" Nullable="false" />
+          <Property Type="String" Name="userid" Nullable="false" />
+          <Property Type="Int32" Name="reader_id" Nullable="false" />
+          <Property Type="Int32" Name="book_id" Nullable="false" />
+          <Property Type="DateTime" Name="loan_date" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="if_closed" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GetAllReaders_Result">
+          <Property Type="Int32" Name="reader_id" Nullable="false" />
+          <Property Type="String" Name="userid" Nullable="false" />
+          <Property Type="String" Name="first_name" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="last_name" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="email" Nullable="true" MaxLength="255" />
+          <Property Type="Boolean" Name="has_book" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GetBookByID_Result">
+          <Property Type="Int32" Name="book_id" Nullable="false" />
+          <Property Type="String" Name="userid" Nullable="false" />
+          <Property Type="String" Name="title" Nullable="false" />
+          <Property Type="String" Name="genre" Nullable="true" />
+          <Property Type="Int32" Name="publication_year" Nullable="false" />
+          <Property Type="String" Name="authors" Nullable="true" />
+          <Property Type="Int32" Name="book_status" Nullable="false" />
+          <Property Type="String" Name="cover" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GetLoanByID_Result">
+          <Property Type="Int32" Name="loan_id" Nullable="false" />
+          <Property Type="String" Name="userid" Nullable="false" />
+          <Property Type="Int32" Name="reader_id" Nullable="false" />
+          <Property Type="Int32" Name="book_id" Nullable="false" />
+          <Property Type="DateTime" Name="loan_date" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="if_closed" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GetReaderByID_Result">
+          <Property Type="Int32" Name="reader_id" Nullable="false" />
+          <Property Type="String" Name="userid" Nullable="false" />
+          <Property Type="String" Name="first_name" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="last_name" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="email" Nullable="true" MaxLength="255" />
+          <Property Type="Boolean" Name="has_book" Nullable="true" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище plibrarydbModelContainer" CdmEntityContainer="plibrarydbEntities">
+          <EntitySetMapping Name="Books">
+            <EntityTypeMapping TypeName="plibrarydbModel.Book">
+              <MappingFragment StoreEntitySet="Book">
+                <ScalarProperty Name="book_id" ColumnName="book_id" />
+                <ScalarProperty Name="userid" ColumnName="userid" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="genre" ColumnName="genre" />
+                <ScalarProperty Name="publication_year" ColumnName="publication_year" />
+                <ScalarProperty Name="authors" ColumnName="authors" />
+                <ScalarProperty Name="book_status" ColumnName="book_status" />
+                <ScalarProperty Name="cover" ColumnName="cover" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Book_status">
+            <EntityTypeMapping TypeName="plibrarydbModel.Book_status">
+              <MappingFragment StoreEntitySet="Book_status">
+                <ScalarProperty Name="status_id" ColumnName="status_id" />
+                <ScalarProperty Name="book_status1" ColumnName="book_status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Loans">
+            <EntityTypeMapping TypeName="plibrarydbModel.Loan">
+              <MappingFragment StoreEntitySet="Loan">
+                <ScalarProperty Name="loan_id" ColumnName="loan_id" />
+                <ScalarProperty Name="userid" ColumnName="userid" />
+                <ScalarProperty Name="reader_id" ColumnName="reader_id" />
+                <ScalarProperty Name="book_id" ColumnName="book_id" />
+                <ScalarProperty Name="loan_date" ColumnName="loan_date" />
+                <ScalarProperty Name="if_closed" ColumnName="if_closed" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Readers">
+            <EntityTypeMapping TypeName="plibrarydbModel.Reader">
+              <MappingFragment StoreEntitySet="Reader">
+                <ScalarProperty Name="reader_id" ColumnName="reader_id" />
+                <ScalarProperty Name="userid" ColumnName="userid" />
+                <ScalarProperty Name="first_name" ColumnName="first_name" />
+                <ScalarProperty Name="last_name" ColumnName="last_name" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="has_book" ColumnName="has_book" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="DeleteBook" FunctionName="Хранилище plibrarydbModel.DeleteBook" />
+          <FunctionImportMapping FunctionImportName="DeleteLoan" FunctionName="Хранилище plibrarydbModel.DeleteLoan" />
+          <FunctionImportMapping FunctionImportName="DeleteReader" FunctionName="Хранилище plibrarydbModel.DeleteReader" />
+          <FunctionImportMapping FunctionImportName="GetAllBooks" FunctionName="Хранилище plibrarydbModel.GetAllBooks">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="plibrarydbModel.GetAllBooks_Result">
+                <ScalarProperty Name="book_id" ColumnName="book_id" />
+                <ScalarProperty Name="userid" ColumnName="userid" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="genre" ColumnName="genre" />
+                <ScalarProperty Name="publication_year" ColumnName="publication_year" />
+                <ScalarProperty Name="authors" ColumnName="authors" />
+                <ScalarProperty Name="book_status" ColumnName="book_status" />
+                <ScalarProperty Name="cover" ColumnName="cover" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetAllLoans" FunctionName="Хранилище plibrarydbModel.GetAllLoans">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="plibrarydbModel.GetAllLoans_Result">
+                <ScalarProperty Name="loan_id" ColumnName="loan_id" />
+                <ScalarProperty Name="userid" ColumnName="userid" />
+                <ScalarProperty Name="reader_id" ColumnName="reader_id" />
+                <ScalarProperty Name="book_id" ColumnName="book_id" />
+                <ScalarProperty Name="loan_date" ColumnName="loan_date" />
+                <ScalarProperty Name="if_closed" ColumnName="if_closed" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetAllReaders" FunctionName="Хранилище plibrarydbModel.GetAllReaders">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="plibrarydbModel.GetAllReaders_Result">
+                <ScalarProperty Name="reader_id" ColumnName="reader_id" />
+                <ScalarProperty Name="userid" ColumnName="userid" />
+                <ScalarProperty Name="first_name" ColumnName="first_name" />
+                <ScalarProperty Name="last_name" ColumnName="last_name" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="has_book" ColumnName="has_book" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetBookByID" FunctionName="Хранилище plibrarydbModel.GetBookByID">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="plibrarydbModel.GetBookByID_Result">
+                <ScalarProperty Name="book_id" ColumnName="book_id" />
+                <ScalarProperty Name="userid" ColumnName="userid" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="genre" ColumnName="genre" />
+                <ScalarProperty Name="publication_year" ColumnName="publication_year" />
+                <ScalarProperty Name="authors" ColumnName="authors" />
+                <ScalarProperty Name="book_status" ColumnName="book_status" />
+                <ScalarProperty Name="cover" ColumnName="cover" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetLoanByID" FunctionName="Хранилище plibrarydbModel.GetLoanByID">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="plibrarydbModel.GetLoanByID_Result">
+                <ScalarProperty Name="loan_id" ColumnName="loan_id" />
+                <ScalarProperty Name="userid" ColumnName="userid" />
+                <ScalarProperty Name="reader_id" ColumnName="reader_id" />
+                <ScalarProperty Name="book_id" ColumnName="book_id" />
+                <ScalarProperty Name="loan_date" ColumnName="loan_date" />
+                <ScalarProperty Name="if_closed" ColumnName="if_closed" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetReaderByID" FunctionName="Хранилище plibrarydbModel.GetReaderByID">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="plibrarydbModel.GetReaderByID_Result">
+                <ScalarProperty Name="reader_id" ColumnName="reader_id" />
+                <ScalarProperty Name="userid" ColumnName="userid" />
+                <ScalarProperty Name="first_name" ColumnName="first_name" />
+                <ScalarProperty Name="last_name" ColumnName="last_name" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="has_book" ColumnName="has_book" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="InsertBook" FunctionName="Хранилище plibrarydbModel.InsertBook" />
+          <FunctionImportMapping FunctionImportName="InsertLoan" FunctionName="Хранилище plibrarydbModel.InsertLoan" />
+          <FunctionImportMapping FunctionImportName="InsertReader" FunctionName="Хранилище plibrarydbModel.InsertReader" />
+          <FunctionImportMapping FunctionImportName="UpdateBook" FunctionName="Хранилище plibrarydbModel.UpdateBook" />
+          <FunctionImportMapping FunctionImportName="UpdateLoan" FunctionName="Хранилище plibrarydbModel.UpdateLoan" />
+          <FunctionImportMapping FunctionImportName="UpdateReader" FunctionName="Хранилище plibrarydbModel.UpdateReader" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
